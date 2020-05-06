@@ -1,25 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React ,{useState} from "react";
+import "./assets/css/main.css";
+import { BrowserRouter, Route } from "react-router-dom";
+
+/* side and top nav */
+import TopNav from "./components/shared/topNavbar";
+import SidebarLeft from "./components/shared/sidebarLeft";
+
+/* components */
+import NotificationComponent from './components/profile/notificationComponent';
+import SettingsComponent from './components/profile/settingsComponent';
+import TaskComponent from './components/task/taskComponent';
+import HomeComponent from './components/homeComponent';
 
 function App() {
+  const [isLogged, setLogged] = useState(false);
+  const toggleLogged = () =>{
+    console.log("pressed");
+    setLogged(!isLogged);
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <TopNav isLogged={isLogged} toggleLogged={toggleLogged}/>
+      {isLogged ? <SidebarLeft /> : null }
+      <div className="container main-container">
+        <Route exact path="/" component={()=> <HomeComponent toggleLogged={toggleLogged} isLogged={isLogged}/>}/>
+        { isLogged ?<> <Route exact path="/profile/notification/" component={NotificationComponent}/>
+        <Route exact path="/profile/settings/" component={SettingsComponent}/>
+        <Route exact path="/mytasks/" component={TaskComponent}/> </>: null}
+      </div>
+    </BrowserRouter>
   );
 }
 
